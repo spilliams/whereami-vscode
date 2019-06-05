@@ -12,15 +12,9 @@
 		"Other"
 	],
 	"activationEvents": [
-		"onCommand:extension.whereami"
+		"*"
 	],
 	"main": "./out/extension.js",
-	"contributes": {
-		"commands": [{
-			"command": "extension.whereami",
-			"title": "whereami"
-		}]
-	},
 	"scripts": {
 		"vscode:prepublish": "yarn run compile",
 		"compile": "tsc -p ./",
