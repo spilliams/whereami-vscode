@@ -1,10 +1,10 @@
 {
 	"name": "whereami",
-	"publisher": "spilliams",
-	"repository": "https://github.com/spilliams/whereami-vscode",
 	"displayName": "whereami",
 	"description": "Displays the byte-location of your cursor in the file",
 	"version": "0.0.1",
+	"publisher": "spilliams",
+	"repository": "https://github.com/spilliams/whereami-vscode",
 	"engines": {
 		"vscode": "^1.34.0"
 	},

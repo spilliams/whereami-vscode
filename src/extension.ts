@@ -8,17 +8,9 @@ let statusBarItem: vscode.StatusBarItem;
 // your extension is activated the very first time the command is executed
 // export function activate(context: vscode.ExtensionContext) {
 export function activate({ subscriptions }: vscode.ExtensionContext) {
-
-	// register a command to invoke when the status bar item is selected
-	// const myCommandId = 'sample.showSelectionCount';
-	// context.subscriptions.push(vscode.commands.registerCommand(myCommandId, () => {
-	// 	let n = getNumberOfSelectedLines(vscode.window.activeTextEditor);
-	// 	vscode.window.showInformationMessage(`Yeah, ${n} line(s) selected... Keep going!`);
-	// }));
-
 	// create a new status bar item that we can now manage
 	statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-	// statusBarItem.command = myCommandId;
+	// statusBarItem.command = commandId;
 	subscriptions.push(statusBarItem);
 
 	// register some listener that make sure the status bar item always up-to-date
@@ -30,20 +22,35 @@ export function activate({ subscriptions }: vscode.ExtensionContext) {
 }
 
 function updateStatusBarItem(): void {
-	console.log(`updating status bar item`);
-	let n = getNumberOfSelectedLines(vscode.window.activeTextEditor);
 	statusBarItem.show();
-	if (n > 0) {
-		statusBarItem.text = `$(megaphone) ${n} line(s) selected`;
-	}
+	statusBarItem.text = getOffsetString(vscode.window.activeTextEditor);
 }
 
-function getNumberOfSelectedLines(editor: vscode.TextEditor | undefined): number {
-	let lines = 0;
+function getOffsetString(editor: vscode.TextEditor | undefined): string {
+	let offset = "";
 	if (editor) {
-		lines = editor.selections.reduce((prev, curr) => prev + (curr.end.line - curr.start.line), 0);
+		for (let i = 0; i < editor.selections.length; i++) {
+			const selection = editor.selections[i];
+			let startB = "#"+byteOffsetAt(editor.document, selection.start);
+			let endB = "#"+byteOffsetAt(editor.document, selection.end);
+			let b = startB;
+			if (startB != endB) {
+				b = startB+"-"+endB;
+			}
+			
+			if (offset.length > 0) {
+				offset += ",";
+			}
+			offset += b;
+		}
 	}
-	return lines;
+	return offset;
+}
+
+function byteOffsetAt(document: vscode.TextDocument, position: vscode.Position): number {
+	const offset = document.offsetAt(position);
+	const text = document.getText();
+	return Buffer.byteLength(text.substr(0, offset));
 }
 
 // this method is called when your extension is deactivated
