@@ -10,7 +10,6 @@ let statusBarItem: vscode.StatusBarItem;
 export function activate({ subscriptions }: vscode.ExtensionContext) {
 	// create a new status bar item that we can now manage
 	statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Right, 100);
-	// statusBarItem.command = commandId;
 	subscriptions.push(statusBarItem);
 
 	// register some listener that make sure the status bar item always up-to-date
